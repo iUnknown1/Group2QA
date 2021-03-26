@@ -1,4 +1,4 @@
-# Group2QA
+# Group2
 
 Group 2 QA: Yeuk Sing Chan, Bryan Brathwaite,Jie Guo
 Group 2 Spec:
