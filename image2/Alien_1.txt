@@ -1,0 +1,34 @@
+<!--
+*Version 1.0
+*5/4/2021
+-->
+<html>
+  <head>   
+    <meta charset="utf-8"/>
+    <title>Alien1</title>
+    <script>
+      let img = document.getElementById("myImage");
+       function draw() {
+        var canvas = document.getElementById('canvas');
+        context = canvas.getContext('2d');
+        let img = new Image();
+img.onload = function() {
+   context.drawImage(img, 10, 10, 360, 220);
+};
+img.src = 'https://i.imgur.com/RoNYg5s.png';
+       }
+      </script>
+    <style>
+      body{
+        background: white;
+      }
+      canvas { border: 1px solid black; background: black; }
+      
+      
+      
+    </style>
+  </head>
+  <body onload="draw();">
+    <canvas id="canvas" width="1000" height="1000"></canvas>
+  </body>
+</html>

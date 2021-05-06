@@ -1,0 +1,36 @@
+<!--
+*Version 1.0
+*3/29/2021
+-->
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Game</title>
+    <script>
+      function draw() {
+        var canvas = document.getElementById('canvas');
+        context = canvas.getContext('2d');
+        stars = 300; // amount of stars
+        for (var i = 0; i < stars; i++) {
+          var x = Math.random() * canvas.offsetWidth;
+          y = Math.random() * canvas.offsetHeight,
+          radius = Math.random() * 1.2;
+          context.beginPath();
+          context.arc(x, y, radius, 0, 360);
+          context.fillStyle = 'rgba(150, 175, 200, 100)';
+          context.fill();
+        }
+      }
+    </script>
+    <style>
+      body{
+        background: white;
+      }
+      canvas { border: 1px solid black; background: black; }
+      
+    </style>
+  </head>
+  <body onload="draw();">
+    <canvas id="canvas" width="1000" height="1000"></canvas>
+  </body>
+</html>

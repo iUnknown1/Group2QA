@@ -1,0 +1,166 @@
+<!--
+*Version 1.0
+*4/29/2021
+-->
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <title>Game</title>
+    <script>
+      function draw() {
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        
+        stars(500, canvas, context); //amount of stars
+        
+        context.fillStyle = 'white';
+        context.textAlign = 'center';
+        context.textBaseline = "middle";
+        context.font = "900 70px Arial";
+        context.fillText("SETTINGS", 500, 70);
+        context.font = "40px Arial";
+        context.fillText("DIFFICULTY", 500, 200);
+        context.fillText("VOLUME", 500, 500);
+        
+        context.fillRect(15, 15, 160, 90);
+        context.fillRect(100, 300, 210, 90);
+        context.fillRect(395, 300, 210, 90);
+        context.fillRect(690, 300, 210, 90);
+        
+        var myRect=[
+          {x:20, y:20, w:150, h:80},
+          {x:105, y:305, w:200, h:80},
+          {x:400, y:305, w:200, h:80},
+          {x:695, y:305, w:200, h:80}
+          ], i = 0, r;
+        
+        while(r = myRect[i++]) context.rect(r.x, r.y, r.w, r.h); //changes color of buttons while hovering
+           context.fillStyle = "black"; context.fill();
+           context.textAlign = 'center';
+           context.textBaseline = "middle";
+           context.font = "40px Arial";
+           canvas.onmousemove = function(e) {
+            var rect = this.getBoundingClientRect(),
+            x = e.clientX - rect.left,
+            y = e.clientY - rect.top,
+            i = 0, r;
+            while(r = myRect[i++]) {
+             context.beginPath();
+             context.rect(r.x, r.y, r.w, r.h); 
+              context.fillStyle = context.isPointInPath(x, y) ? 'rgb(41, 40, 40)' : "black";
+              context.fill();
+              context.fillStyle = 'white';
+              context.fillText("Back", 95, 60); //capitalization follows the specs
+              context.fillText("Easy", 205, 345);
+              context.fillText("Medium", 500, 345);
+              context.fillText("Hard", 795, 345);
+            }
+          };
+        
+        function getMousePos(canvas, event) { //detects mouse click on buttons
+          var rect = canvas.getBoundingClientRect();
+          return {
+            x: event.clientX - rect.left,
+            y: event.clientY - rect.top
+          };
+        }
+        function isInside(pos, rect){
+          return pos.x > rect.x && pos.x < rect.x+rect.width && pos.y < rect.y+rect.height && pos.y > rect.y
+        }
+        
+        var back = {
+          x:20,
+          y:20,
+          width:150,
+          height:80
+        };
+        var easy = {
+          x:105,
+          y:305,
+          width:200,
+          height:80
+        };
+        var medium = {
+          x:400,
+          y:305,
+          width:200,
+          height:80
+        };
+        var hard = {
+          x:695,
+          y:305,
+          width:200,
+          height:80
+        };
+        canvas.addEventListener('click', function(evt) {
+          var mousePos = getMousePos(canvas, evt);
+          if (isInside(mousePos, back)) { 
+            alert('Back'); //filler, replace with actual code
+          }
+          if (isInside(mousePos, easy)) {
+            alert('Easy'); //filler, replace with actual code
+          }
+          if (isInside(mousePos, medium)) {
+            alert('Medium'); //filler, replace with actual code
+          }
+          if (isInside(mousePos, hard)) {
+            alert('Hard'); //filler, replace with actual code
+          }
+        }, false);
+      }
+      
+      function stars(stars, canvas, context){
+        for (var i = 0; i < stars; i++) { //Creates the background
+          var x = Math.random() * canvas.offsetWidth;
+          y = Math.random() * canvas.offsetHeight,
+          radius = Math.random() * 1.2;
+          context.beginPath();
+          context.arc(x, y, radius, 0, 360);
+          context.fillStyle = 'rgba(150, 175, 200, 100)';
+          context.fill();
+        }
+      }
+    </script>
+    <style>
+      body{
+        background: white;
+      }
+      #container {
+        position: relative;
+      } 
+      #container canvas, #myRange {
+        position: absolute;
+      }
+      canvas { 
+        position: absolute; top:10px; left:10px; border: 1px solid black; background:       black; 
+      }
+      .slidecontainer {
+        width: 100%;
+      }
+      .slider {
+        appearance: none;
+        top:600px;
+        left:100px;
+        width: 800px;
+        height: 20px;
+        background: #ffffff;
+      }
+      .slider::-webkit-slider-thumb {
+        appearance: none;
+        width: 15px;
+        height: 35px;
+        background: #808080;
+        cursor: pointer;
+      }
+     
+    </style>
+  </head>
+  <body onload="draw();">
+    <div id="container">
+    <canvas id="canvas" width="1000" height="1000"></canvas>
+      <div class="slidecontainer">
+        <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+      </div>
+     </div>
+  </body>
+</html>
