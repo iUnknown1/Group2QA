@@ -294,9 +294,16 @@ const handleMobAttack = () => {
     return;
   }
   // makes a random mob attack
-  const randRow = getRandomRow();
-  const randCol = getRandomCol();
-  const mob = mobs[randRow][randCol];
+  let validMob = false;
+  let mob = null;
+  while (!validMob) {
+    const randRow = getRandomRow();
+    const randCol = getRandomCol();
+    mob = mobs[randRow][randCol];
+    if (mob.alive) {
+      validMob = true;
+    }
+  }
 
   let bullet = new Bullet();
   bullet.bulletX = mob.x;
