@@ -1,0 +1,17 @@
+#title-bar {
+  text-align: center;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  line-height: 2.6rem;
+
+  background-color: #e74c3c;
+
+  width: 1290px;
+  margin: auto;
+}
+
+#title-bar p {
+  font-size: 32px;
+  font-family: fantasy;
+  color: #ecf0f1;
+}

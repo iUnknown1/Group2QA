@@ -366,3 +366,20 @@ document.addEventListener('keydown', handleKeyDown, false);
 document.addEventListener('keyup', handleKeyUp, false);
 
 window.onload = draw;
+
+// test btn to pause game, can be used in menus
+btn1 = document.getElementById('btn1');
+let show = true;
+btn1.onclick = () => {
+  contain = document.getElementById('container');
+  if (show) {
+    contain.style.display = 'none';
+    show = !show;
+    pause = true;
+  } else {
+    contain.style.display = 'block';
+    show = !show;
+    pause = false;
+    draw();
+  }
+};
