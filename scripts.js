@@ -10,6 +10,7 @@ const mob1 = document.getElementById('mob1');
 const mob2 = document.getElementById('mob2');
 const mob3 = document.getElementById('mob3');
 const mob_destroyed = document.getElementById('mob_destroyed');
+const game_logo = document.getElementById('game_logo');
 
 // draw sprites
 const shipHeight = 130;
@@ -41,6 +42,7 @@ let leftPressed = false;
 let spacePressed = false;
 let bulletFrameCounter = 0;
 const bulletFrameCooldown = 50;
+let pause = false; // pause / unpause game
 const handleKeyDown = (e) => {
   if (e.key === 'Right' || e.key === 'ArrowRight') {
     rightPressed = true;
@@ -51,6 +53,13 @@ const handleKeyDown = (e) => {
     if (bulletFrameCounter > bulletFrameCooldown) {
       spacePressed = true;
       bulletFrameCounter = 0;
+    }
+  } else if (e.key === 'p' || e.key === 'P') {
+    if (pause) {
+      pause = false;
+      draw();
+    } else {
+      pauseGame();
     }
   }
 };
@@ -94,6 +103,15 @@ const drawScore = () => {
   ctx.fillStyle = 'white';
   ctx.fillText('Score: ' + score, 16, 25);
 };
+const drawPauseText = () => {
+  ctx.font = '12px Arial';
+  ctx.fillStyle = 'lightpink';
+  if (pause) {
+    ctx.fillText('PRESS P TO UNPAUSE', 120, 25);
+  } else {
+    ctx.fillText('PRESS P TO PAUSE', 120, 25);
+  }
+};
 
 // handle bullet drawing and movement
 class Bullet {
@@ -131,7 +149,7 @@ class Bullet {
     this.moveBulletDown();
   }
 }
-const bullets = [];
+let bullets = [];
 const handleBullets = () => {
   if (spacePressed) {
     bullets.push(new Bullet());
@@ -157,7 +175,7 @@ const mobOffsetTop = 70;
 const mobOffsetLeft = 180;
 let mobPosition = 5;
 const deathSpriteCooldown = 50;
-const mobs = [];
+let mobs = [];
 for (let row = 0; row < mobRows; row++) {
   mobs.push([]);
   for (let col = 0; col < mobCols; col++) {
@@ -262,7 +280,6 @@ const handleBulletCollision = () => {
   }
 };
 
-let pause = false;
 const handleVictory = () => {
   const mobCount = mobs.length * mobs[0].length;
   if (score === mobCount) {
@@ -272,7 +289,7 @@ const handleVictory = () => {
   }
 };
 
-const mobBullets = [];
+let mobBullets = [];
 const mobAttackCooldown = 100;
 let mobAttackFrameCounter = 0;
 const getRandomRow = () => {
@@ -341,13 +358,66 @@ const handleMobBulletCollision = () => {
 //     this.bulletHeight = 50;
 //     this.active = 1;
 
+const newGame = { x: 485, y: 295, width: 300, height: 80 };
+const continueGame = { x: 485, y: 405, width: 300, height: 80 };
+const menuOptions = () => {
+  ctx.fillStyle = 'white';
+  // border
+  ctx.fillRect(480, 290, 310, 90);
+  ctx.fillRect(480, 400, 310, 90);
+  ctx.fillRect(480, 510, 310, 90);
+  ctx.fillRect(480, 620, 310, 90);
+  // static inner
+  ctx.fillStyle = 'black';
+  ctx.fillRect(485, 295, 300, 80);
+  ctx.fillRect(485, 405, 300, 80);
+  ctx.fillRect(485, 515, 300, 80);
+  ctx.fillRect(485, 625, 300, 80);
+  // text
+  ctx.fillStyle = 'white';
+  ctx.font = '40px Arial';
+  ctx.fillText('new Game', 544, 350);
+  ctx.fillText('Continue', 555, 460);
+
+  // hover breaks game...... if you think you can incorporate go ahead.
+  // // hover color, inner while mouse moving
+  // const menuOpts = [
+  //   { x: 485, y: 295, w: 300, h: 80 },
+  //   { x: 485, y: 405, w: 300, h: 80 },
+  //   { x: 485, y: 515, w: 300, h: 80 },
+  //   { x: 485, y: 625, w: 300, h: 80 },
+  // ];
+  // canvas.onmousemove = function (e) {
+  //   var rect = this.getBoundingClientRect();
+  //   let x = e.clientX - rect.left;
+  //   let y = e.clientY - rect.top;
+  //   let i = 0;
+  //   let opt;
+  //   while ((opt = menuOpts[i++])) {
+  //     ctx.beginPath();
+  //     ctx.rect(opt.x, opt.y, opt.w, opt.h);
+  //     ctx.fillStyle = ctx.isPointInPath(x, y) ? 'rgb(41, 40, 40)' : 'black';
+  //     ctx.fill();
+  //     // text while moving
+  //     ctx.fillStyle = 'white';
+  //     ctx.font = '40px Arial';
+  //     ctx.fillText('Continue', 555, 460);
+  //   }
+  // };
+};
+
 // Main draw function
 draw = () => {
+  if (pause) {
+    return;
+  }
+
   // Clear the previous frame
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   drawScore();
   drawLives();
+  drawPauseText();
   drawShip();
   drawStars();
   handleBullets();
@@ -362,27 +432,37 @@ draw = () => {
 
   // Confirm game loop
   console.log('drawing');
-  if (pause) {
-    return;
-  }
   requestAnimationFrame(draw);
 };
 
-// Event listeners
-document.addEventListener('keydown', handleKeyDown, false);
-document.addEventListener('keyup', handleKeyUp, false);
-
-window.onload = draw;
-
 // test btn to pause game, can be used in menus
+const pauseGame = () => {
+  // space invaders logo
+  pause = true;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawStars();
+  drawScore();
+  drawLives();
+  const logoWidth = 400;
+  const logoHeight = 200;
+  const logoX = canvas.width / 2 - logoWidth / 2;
+  const logoY = 50;
+  ctx.drawImage(game_logo, logoX, logoY, logoWidth, logoHeight);
+
+  // menu
+  menuOptions();
+  drawPauseText();
+};
+
 btn1 = document.getElementById('btn1');
 let show = true;
 btn1.onclick = () => {
   contain = document.getElementById('container');
   if (show) {
-    contain.style.display = 'none';
+    // contain.style.display = 'none';
+    contain.style.display = 'block';
     show = !show;
-    pause = true;
+    pauseGame();
   } else {
     contain.style.display = 'block';
     show = !show;
@@ -390,3 +470,85 @@ btn1.onclick = () => {
     draw();
   }
 };
+
+// handle mouse pos for menu options
+const getCursorPosition = (canvas, event) => {
+  const rect = canvas.getBoundingClientRect();
+  const x = event.clientX - rect.left;
+  const y = event.clientY - rect.top;
+  return { x: x, y: y };
+};
+const isInside = (pos, rect) => {
+  return (
+    pos.x > rect.x &&
+    pos.x < rect.x + rect.width &&
+    pos.y < rect.y + rect.height &&
+    pos.y > rect.y
+  );
+};
+
+const unpauseGame = () => {
+  if (pause) {
+    pause = false;
+    draw();
+  }
+};
+
+// handle click for menu options
+const handleMouseClick = (e) => {
+  const mousePos = getCursorPosition(canvas, e);
+  if (isInside(mousePos, newGame)) {
+    // alert('new Game'); //filler, replace with actual code
+    resetGame();
+    unpauseGame();
+  }
+  if (isInside(mousePos, continueGame)) {
+    // alert('Continue'); //filler, replace with actual code
+    unpauseGame();
+  }
+  // if (isInside(mousePos, leaderBoards)) {
+  //   alert('LeaderBoards'); //filler, replace with actual code
+  // }
+  // if (isInside(mousePos, settings)) {
+  //   alert('Settings'); //filler, replace with actual code
+  // }
+};
+
+const resetMobs = () => {
+  mobs = [];
+  for (let row = 0; row < mobRows; row++) {
+    mobs.push([]);
+    for (let col = 0; col < mobCols; col++) {
+      let mobEntity = {
+        type: mobTypes[row],
+        x: 0,
+        y: 0,
+        alive: 1,
+        deathFrameCounter: 0,
+      };
+      mobs[row].push(mobEntity);
+    }
+  }
+};
+
+const resetShipPos = () => {
+  shipX = canvas.width / 2 - shipWidth;
+};
+
+const resetGame = () => {
+  score = 0;
+  lives = 3;
+  resetMobs();
+  resetShipPos();
+  bullets = [];
+  mobBullets = [];
+  mobPosition = 0;
+};
+
+// Event listeners
+document.addEventListener('keydown', handleKeyDown, false);
+document.addEventListener('keyup', handleKeyUp, false);
+canvas.addEventListener('click', handleMouseClick, false);
+
+// window.onload = draw;
+window.onload = pauseGame();
