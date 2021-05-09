@@ -13,6 +13,7 @@ const mob_destroyed = document.getElementById('mob_destroyed');
 const game_logo = document.getElementById('game_logo');
 
 // draw sprites
+// old ship dimensions
 const shipHeight = 130;
 const shipWidth = 80;
 let shipX = (canvas.width - shipWidth) / 2;
@@ -29,19 +30,14 @@ const drawShip = () => {
 const drawStars = () => {
   ctx.drawImage(bkgStars, 0, 0, canvas.width, canvas.height);
 };
-let bulletY = canvas.height - shipHeight;
-let bulletX = shipX;
-const drawBullet = () => {
-  ctx.drawImage(bullet, 100, 100, 500, 500);
-  bulletY -= 2;
-};
 
 // handle key press
 let rightPressed = false;
 let leftPressed = false;
 let spacePressed = false;
 let bulletFrameCounter = 0;
-const bulletFrameCooldown = 50;
+// const bulletFrameCooldown = 50;
+const bulletFrameCooldown = 40;
 let pause = false; // pause / unpause game
 const handleKeyDown = (e) => {
   if (e.key === 'Right' || e.key === 'ArrowRight') {
@@ -133,10 +129,12 @@ class Bullet {
     this.moveBulletUp();
   }
   moveBulletUp() {
-    this.bulletY -= 4;
+    // this.bulletY -= 4;
+    this.bulletY -= 9;
   }
   moveBulletDown() {
-    this.bulletY += 4;
+    // this.bulletY += 4;
+    this.bulletY += 7;
   }
   drawMobBullet() {
     ctx.drawImage(
@@ -290,7 +288,8 @@ const handleVictory = () => {
 };
 
 let mobBullets = [];
-const mobAttackCooldown = 100;
+// const mobAttackCooldown = 100;
+const mobAttackCooldown = 50;
 let mobAttackFrameCounter = 0;
 const getRandomRow = () => {
   return Math.floor(Math.random() * (mobs.length - 1));
@@ -423,7 +422,6 @@ draw = () => {
   handleBullets();
   handleShipMovement();
   handleMobPosition();
-  handleBullets();
   handleBulletCollision();
   handleMobBulletCollision();
   drawMobs();
