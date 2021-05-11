@@ -1,0 +1,249 @@
+<!--
+  WHAT'S LEFT:
+  - back button
+  - real data?
+-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Game</title>
+    <script>
+      function loadPage() {
+        draw();
+        onChangeDifficulty('easy');
+      }
+      function draw() {
+        var canvas = document.getElementById('canvas');
+        var context = canvas.getContext('2d');
+        fix_dpi(canvas);
+
+        stars(500, canvas, context); //amount of stars
+      }
+      function fix_dpi(canvas) {
+        let dpi = window.devicePixelRatio;
+
+        //get CSS height
+        //the + prefix casts it to an integer
+        //the slice method gets rid of "px"
+        let style_height = +getComputedStyle(canvas)
+          .getPropertyValue('height')
+          .slice(0, -2);
+
+        //get CSS width
+        let style_width = +getComputedStyle(canvas)
+          .getPropertyValue('width')
+          .slice(0, -2);
+
+        //scale the canvas
+        canvas.setAttribute('height', style_height * dpi);
+        canvas.setAttribute('width', style_width * dpi);
+      }
+      function stars(stars, canvas, context) {
+        for (var i = 0; i < stars; i++) {
+          //Creates the background
+          var x = Math.random() * canvas.width,
+            y = Math.random() * canvas.height,
+            radius = Math.random() * 1.2;
+
+          context.beginPath();
+          context.arc(x, y, radius, 0, 2 * Math.PI);
+          context.fillStyle = 'rgba(150, 175, 200, 100)';
+          context.fill();
+        }
+      }
+      function onChangeDifficulty(difficulty) {
+        console.log('Change difficulty to ' + difficulty);
+
+        // get new list information
+        // this is mock data, change it to real data
+        var newData = [
+          {
+            userId: Math.floor(Math.random() * (999 - 100 + 1) + 100).toString(),
+            score: Math.floor(Math.random() * (7000 - 3000 + 1) + 3000).toString(),
+          },
+          {
+            userId: Math.floor(Math.random() * (999 - 100 + 1) + 100).toString(),
+            score: Math.floor(Math.random() * (7000 - 3000 + 1) + 3000).toString(),
+          },
+          {
+            userId: Math.floor(Math.random() * (999 - 100 + 1) + 100).toString(),
+            score: Math.floor(Math.random() * (7000 - 3000 + 1) + 3000).toString(),
+          },
+          {
+            userId: Math.floor(Math.random() * (999 - 100 + 1) + 100).toString(),
+            score: Math.floor(Math.random() * (7000 - 3000 + 1) + 3000).toString(),
+          },
+          {
+            userId: Math.floor(Math.random() * (999 - 100 + 1) + 100).toString(),
+            score: Math.floor(Math.random() * (7000 - 3000 + 1) + 3000).toString(),
+          },
+          {
+            userId: Math.floor(Math.random() * (999 - 100 + 1) + 100).toString(),
+            score: Math.floor(Math.random() * (7000 - 3000 + 1) + 3000).toString(),
+          },
+          {
+            userId: Math.floor(Math.random() * (999 - 100 + 1) + 100).toString(),
+            score: Math.floor(Math.random() * (7000 - 3000 + 1) + 3000).toString(),
+          },
+          {
+            userId: Math.floor(Math.random() * (999 - 100 + 1) + 100).toString(),
+            score: Math.floor(Math.random() * (7000 - 3000 + 1) + 3000).toString(),
+          },
+          {
+            userId: Math.floor(Math.random() * (999 - 100 + 1) + 100).toString(),
+            score: Math.floor(Math.random() * (7000 - 3000 + 1) + 3000).toString(),
+          },
+          {
+            userId: Math.floor(Math.random() * (999 - 100 + 1) + 100).toString(),
+            score: Math.floor(Math.random() * (7000 - 3000 + 1) + 3000).toString(),
+          }
+        ];
+
+        // remove old info and display new info
+        var highScoresList = document.getElementById('high-scores-list');
+        var child = highScoresList.lastElementChild;
+        while (child) {
+          highScoresList.removeChild(child);
+          child = highScoresList.lastElementChild;
+        }
+        newData.forEach(x => {
+          var newNode = document.createElement('div');
+          newNode.className = 'high-score';
+          var a = document.createElement('div');
+          a.innerText=x.userId;
+          var b = document.createElement('div');
+          b.innerText=x.score;
+          newNode.appendChild(a);
+          newNode.appendChild(b);
+          highScoresList.appendChild(newNode);
+        });
+      }
+
+      function goBack() {
+        alert("Go back");
+        // insert real code
+      }
+    </script>
+    <style>
+      body,
+      html {
+        margin: 0;
+        font: 20px Arial;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        color: white;
+      }
+      .button {
+        line-height: 80px;
+        text-align: center;
+        height: 80px;
+        width: 300px;
+        border: 2px solid white;
+        font-weight: bold;
+        margin: 20px;
+      }
+      .back {
+        line-height: 50px;
+        height: 50px;
+        width: 150px;
+        margin-top: 20px;
+        color: white;
+        cursor: pointer;
+      }
+      .back:hover {
+        background-color: gray;
+      }
+      .difficulty-container {
+        display: flex;
+        width: 75%;
+        justify-content: space-around;
+        margin-top: 20px;
+      }
+      .difficulty {
+        border: 2px solid white;
+        text-align: center;
+        width: 100px;
+        padding: 10px;
+        cursor: pointer;
+      }
+      .difficulty:hover {
+        background-color: #139d08;
+        color: white;
+        border: 2px solid #139d08;
+      }
+      .leaderboards-container {
+        width: 50%;
+        margin-top: 20px;
+        font: 20px Arial;
+      }
+      #high-scores-list {
+        margin-top: 20px;
+      }
+      .high-score {
+        display: flex;
+        justify-content: space-around;
+        margin: auto;
+      }
+      .headings {
+        display: flex;
+        justify-content: space-around;
+        font-weight: bold;
+        color: #139d08;
+        margin: auto;
+      }
+      #canvas {
+        background: black;
+        position: fixed;
+        z-index: -1;
+        width: 100%;
+        height: 100%;
+        margin-top: -20px;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body onload="loadPage();">
+    <canvas id="canvas"></canvas>
+    <div onclick="goBack()" class="back button">BACK</div>
+    <div class="container">
+      <h1 class="leaderboards button">Leaderboards</h1>
+      <div class="difficulty-container">
+        <div onclick="onChangeDifficulty('easy')" class="difficulty" id="easy">
+          Easy
+        </div>
+        <div
+          onclick="onChangeDifficulty('medium')"
+          class="difficulty"
+          id="medium"
+        >
+          Medium
+        </div>
+        <div onclick="onChangeDifficulty('hard')" class="difficulty" id="hard">
+          Hard
+        </div>
+      </div>
+      <div class="leaderboards-container">
+        <h2 class="headings">
+          <div>User Id</div>
+          <div>High Score</div>
+        </h2>
+        <div id="high-scores-list">
+          <div class="high-score">
+            <div>939</div>
+            <div>6862</div>
+          </div>
+          <div class="high-score">
+            <div>254</div>
+            <div>6246</div>
+          </div>
+          <div class="high-score">
+            <div>386</div>
+            <div>5291</div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
